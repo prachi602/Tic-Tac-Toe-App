@@ -6,8 +6,7 @@ public class main {
     /*
      * UC1: Display Empty Tic-Tac-Toe Board
      * Goal: Initialize and display an empty board*/
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         initializeBoard();
         printBoard();
     }
