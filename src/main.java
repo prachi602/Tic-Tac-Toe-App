@@ -3,36 +3,39 @@ import java.util.Scanner;
 
 public class main {
 
-    // 2D array representing the Tic-Tac-Toe board
+    // Board (3x3)
     static char[][] board = new char[3][3];
 
-    // Player names
+    // Players
     static String player1 = "Player 1";
     static String player2 = "Player 2";
 
-    // Stores current player
+    // Game state
     static String currentPlayer;
-
-    // Symbols for players
     static char player1Symbol;
     static char player2Symbol;
 
     /*
-     * Main method - executes UC1, UC2, UC3
+     * Main method - runs UC1 to UC4
      */
     public static void main(String[] args) {
 
         initializeBoard();   // UC1
         tossAndAssign();     // UC2
-        printBoard();        // display empty board
+        printBoard();
 
         int slot = getUserInput();   // UC3
 
-        System.out.println("You selected slot: " + slot);
+        // UC4: Convert slot to row & column
+        int row = getRowFromSlot(slot);
+        int col = getColFromSlot(slot);
+
+        System.out.println("Row: " + row);
+        System.out.println("Column: " + col);
     }
 
     /*
-     * UC1: Initialize board with '-'
+     * UC1: Initialize board
      */
     static void initializeBoard() {
         for (int row = 0; row < 3; row++) {
@@ -43,12 +46,12 @@ public class main {
     }
 
     /*
-     * UC2: Random toss and symbol assignment
+     * UC2: Toss and assign symbols
      */
     static void tossAndAssign() {
 
         Random random = new Random();
-        int toss = random.nextInt(2); // 0 or 1
+        int toss = random.nextInt(2);
 
         if (toss == 0) {
             currentPlayer = player1;
@@ -67,31 +70,42 @@ public class main {
     }
 
     /*
-     * UC3: Accept User Slot Input (1–9)
-     * Reads input and returns slot number
+     * UC3: Get user input (1–9)
      */
     static int getUserInput() {
 
         Scanner scanner = new Scanner(System.in);
 
-        // Determine current player's symbol
         char symbol = (currentPlayer.equals(player1)) ? player1Symbol : player2Symbol;
 
         System.out.print(currentPlayer + " (" + symbol + "), enter slot (1-9): ");
 
-        int slot = scanner.nextInt();   // read integer input
+        int slot = scanner.nextInt();
 
-        return slot;   // return to main/game logic
+        return slot;
     }
 
     /*
-     * Print board in formatted grid
+     * UC4: Convert slot to row index
+     */
+    static int getRowFromSlot(int slot) {
+        return (slot - 1) / 3;
+    }
+
+    /*
+     * UC4: Convert slot to column index
+     */
+    static int getColFromSlot(int slot) {
+        return (slot - 1) % 3;
+    }
+
+    /*
+     * Print board
      */
     static void printBoard() {
         System.out.println("-------------");
 
         for (int row = 0; row < 3; row++) {
-
             System.out.print("| ");
 
             for (int col = 0; col < 3; col++) {
