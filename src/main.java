@@ -30,8 +30,15 @@ public class main {
         int row = getRowFromSlot(slot);
         int col = getColFromSlot(slot);
 
-        System.out.println("Row: " + row);
-        System.out.println("Column: " + col);
+        System.out.println("Row: " + (row+1));
+        System.out.println("Column: " + (col+1));
+// UC5 validation
+        if (isValidMove(slot, row, col)) {
+            placeMove(row, col);
+            printBoard();
+        } else {
+            System.out.println("Move rejected. Try again.");
+        }
     }
 
     /*
@@ -115,5 +122,37 @@ public class main {
             System.out.println();
             System.out.println("-------------");
         }
+    }
+    /*
+     * UC5: Validate move
+     * Checks:
+     * 1. Slot is between 1–9
+     * 2. Cell is empty
+     */
+    static boolean isValidMove(int slot, int row, int col) {
+
+        // Check slot bounds
+        if (slot < 1 || slot > 9) {
+            System.out.println("Invalid slot! Choose between 1 and 9.");
+            return false;
+        }
+
+        // Check if cell is empty
+        if (board[row][col] != '-') {
+            System.out.println("Cell already occupied! Choose another slot.");
+            return false;
+        }
+
+        return true; // valid move
+    }
+
+    /*
+     * Place move on board
+     */
+    static void placeMove(int row, int col) {
+
+        char symbol = (currentPlayer.equals(player1)) ? player1Symbol : player2Symbol;
+
+        board[row][col] = symbol;
     }
 }
