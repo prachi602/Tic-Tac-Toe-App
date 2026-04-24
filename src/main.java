@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class main {
 
-    // Board (3x3)
+    // Board
     static char[][] board = new char[3][3];
 
     // Players
@@ -15,9 +15,6 @@ public class main {
     static char player1Symbol;
     static char player2Symbol;
 
-    /*
-     * Main method - runs UC1 to UC4
-     */
     public static void main(String[] args) {
 
         initializeBoard();   // UC1
@@ -26,16 +23,23 @@ public class main {
 
         int slot = getUserInput();   // UC3
 
-        // UC4: Convert slot to row & column
-        int row = getRowFromSlot(slot);
+        int row = getRowFromSlot(slot);   // UC4
         int col = getColFromSlot(slot);
-
         System.out.println("Row: " + (row+1));
         System.out.println("Column: " + (col+1));
-// UC5 validation
+
+
+        // UC5: Validate
         if (isValidMove(slot, row, col)) {
-            placeMove(row, col);
+
+            // Determine symbol of current player
+            char symbol = (currentPlayer.equals(player1)) ? player1Symbol : player2Symbol;
+
+            // UC6: Place move
+            placeMove(row, col, symbol);
+
             printBoard();
+
         } else {
             System.out.println("Move rejected. Try again.");
         }
@@ -77,7 +81,7 @@ public class main {
     }
 
     /*
-     * UC3: Get user input (1–9)
+     * UC3: Get user input
      */
     static int getUserInput() {
 
@@ -87,23 +91,46 @@ public class main {
 
         System.out.print(currentPlayer + " (" + symbol + "), enter slot (1-9): ");
 
-        int slot = scanner.nextInt();
-
-        return slot;
+        return scanner.nextInt();
     }
 
     /*
-     * UC4: Convert slot to row index
+     * UC4: Slot to row
      */
     static int getRowFromSlot(int slot) {
         return (slot - 1) / 3;
     }
 
     /*
-     * UC4: Convert slot to column index
+     * UC4: Slot to column
      */
     static int getColFromSlot(int slot) {
         return (slot - 1) % 3;
+    }
+
+    /*
+     * UC5: Validate move
+     */
+    static boolean isValidMove(int slot, int row, int col) {
+
+        if (slot < 1 || slot > 9) {
+            System.out.println("Invalid slot! Choose between 1 and 9.");
+            return false;
+        }
+
+        if (board[row][col] != '-') {
+            System.out.println("Cell already occupied!");
+            return false;
+        }
+
+        return true;
+    }
+
+    /*
+     * UC6: Place move on board
+     */
+    static void placeMove(int row, int col, char symbol) {
+        board[row][col] = symbol;
     }
 
     /*
@@ -122,37 +149,5 @@ public class main {
             System.out.println();
             System.out.println("-------------");
         }
-    }
-    /*
-     * UC5: Validate move
-     * Checks:
-     * 1. Slot is between 1–9
-     * 2. Cell is empty
-     */
-    static boolean isValidMove(int slot, int row, int col) {
-
-        // Check slot bounds
-        if (slot < 1 || slot > 9) {
-            System.out.println("Invalid slot! Choose between 1 and 9.");
-            return false;
-        }
-
-        // Check if cell is empty
-        if (board[row][col] != '-') {
-            System.out.println("Cell already occupied! Choose another slot.");
-            return false;
-        }
-
-        return true; // valid move
-    }
-
-    /*
-     * Place move on board
-     */
-    static void placeMove(int row, int col) {
-
-        char symbol = (currentPlayer.equals(player1)) ? player1Symbol : player2Symbol;
-
-        board[row][col] = symbol;
     }
 }
