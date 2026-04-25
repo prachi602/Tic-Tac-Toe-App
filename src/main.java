@@ -14,6 +14,8 @@ public class main {
     static String currentPlayer;
     static char player1Symbol;
     static char computerSymbol;
+    static boolean isHumanTurn = true;
+    static boolean gameOver = false;
 
     static Scanner scanner = new Scanner(System.in);
     static Random random = new Random();
@@ -23,16 +25,24 @@ public class main {
         initializeBoard();   // UC1
         tossAndAssign();     // UC2
         printBoard();
+        while (!gameOver) {
 
-        // One round: Player → Computer
-        playerMove();// Human move
+            if (isHumanTurn) {
+                playerMove();
+            } else {
+                computerMove();
+            }
 
-        printBoard();
+            printBoard();
 
-        computerMove();      // UC7
-        printBoard();
+            // Just calling UC9 & UC10
+            if (checkWin() || checkDraw()) {
+                gameOver = true;
+            }
+
+            isHumanTurn = !isHumanTurn;
+        }
     }
-
     /*
      * UC1: Initialize board
      */
@@ -149,12 +159,10 @@ public class main {
 
             row = getRowFromSlot(slot);
             col = getColFromSlot(slot);
-            System.out.println("Placement for the computer's move:");
-
-
             if (isValidMove(slot, row, col)) {
 
                 System.out.println("Computer chooses slot: " + slot);
+                System.out.println("PLacement for computer's move:");
                 System.out.println("Row:"+(row+1));
                 System.out.println("Coloumn:"+(col+1));
 
@@ -180,5 +188,14 @@ public class main {
             System.out.println();
             System.out.println("-------------");
         }
+    }
+    // UC9 (stub)
+    static boolean checkWin() {
+        return false;
+    }
+
+    // UC10 (stub)
+    static boolean checkDraw() {
+        return false;
     }
 }
