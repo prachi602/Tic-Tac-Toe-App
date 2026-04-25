@@ -8,12 +8,15 @@ public class main {
 
     // Players
     static String player1 = "Player 1";
-    static String player2 = "Player 2";
+    static String computer = "Computer";
 
     // Game state
     static String currentPlayer;
     static char player1Symbol;
-    static char player2Symbol;
+    static char computerSymbol;
+
+    static Scanner scanner = new Scanner(System.in);
+    static Random random = new Random();
 
     public static void main(String[] args) {
 
@@ -21,28 +24,13 @@ public class main {
         tossAndAssign();     // UC2
         printBoard();
 
-        int slot = getUserInput();   // UC3
+        // One round: Player → Computer
+        playerMove();// Human move
 
-        int row = getRowFromSlot(slot);   // UC4
-        int col = getColFromSlot(slot);
-        System.out.println("Row: " + (row+1));
-        System.out.println("Column: " + (col+1));
+        printBoard();
 
-
-        // UC5: Validate
-        if (isValidMove(slot, row, col)) {
-
-            // Determine symbol of current player
-            char symbol = (currentPlayer.equals(player1)) ? player1Symbol : player2Symbol;
-
-            // UC6: Place move
-            placeMove(row, col, symbol);
-
-            printBoard();
-
-        } else {
-            System.out.println("Move rejected. Try again.");
-        }
+        computerMove();      // UC7
+        printBoard();
     }
 
     /*
@@ -61,65 +49,80 @@ public class main {
      */
     static void tossAndAssign() {
 
-        Random random = new Random();
         int toss = random.nextInt(2);
 
         if (toss == 0) {
             currentPlayer = player1;
             player1Symbol = 'X';
-            player2Symbol = 'O';
+            computerSymbol = 'O';
         } else {
-            currentPlayer = player2;
-            player2Symbol = 'X';
+            currentPlayer = computer;
+            computerSymbol = 'X';
             player1Symbol = 'O';
         }
 
         System.out.println("Toss Result:");
         System.out.println(currentPlayer + " starts first!");
         System.out.println(player1 + " = " + player1Symbol);
-        System.out.println(player2 + " = " + player2Symbol);
+        System.out.println(computer + " = " + computerSymbol);
     }
 
     /*
-     * UC3: Get user input
+     * UC3 + UC4 + UC5 + UC6: Player Move
+     */
+    static void playerMove() {
+
+        int slot = getUserInput();
+
+        int row = getRowFromSlot(slot);
+        int col = getColFromSlot(slot);
+        System.out.println("Placement for the player's move:");
+        System.out.println("Row:"+(row+1));
+        System.out.println("Coloumn:"+(col+1));
+
+
+
+        if (isValidMove(slot, row, col)) {
+            placeMove(row, col, player1Symbol);
+        } else {
+            System.out.println("Invalid move. Try again.");
+            playerMove(); // retry
+        }
+    }
+
+    /*
+     * UC3: Input
      */
     static int getUserInput() {
 
-        Scanner scanner = new Scanner(System.in);
-
-        char symbol = (currentPlayer.equals(player1)) ? player1Symbol : player2Symbol;
-
-        System.out.print(currentPlayer + " (" + symbol + "), enter slot (1-9): ");
-
+        System.out.print(player1 + " (" + player1Symbol + "), enter slot (1-9): ");
         return scanner.nextInt();
     }
 
     /*
-     * UC4: Slot to row
+     * UC4: Slot → Row
      */
     static int getRowFromSlot(int slot) {
         return (slot - 1) / 3;
     }
 
     /*
-     * UC4: Slot to column
+     * UC4: Slot → Column
      */
     static int getColFromSlot(int slot) {
         return (slot - 1) % 3;
     }
 
     /*
-     * UC5: Validate move
+     * UC5: Validate
      */
     static boolean isValidMove(int slot, int row, int col) {
 
         if (slot < 1 || slot > 9) {
-            System.out.println("Invalid slot! Choose between 1 and 9.");
             return false;
         }
 
         if (board[row][col] != '-') {
-            System.out.println("Cell already occupied!");
             return false;
         }
 
@@ -127,10 +130,38 @@ public class main {
     }
 
     /*
-     * UC6: Place move on board
+     * UC6: Place move
      */
     static void placeMove(int row, int col, char symbol) {
         board[row][col] = symbol;
+    }
+
+    /*
+     * UC7: Computer Move
+     */
+    static void computerMove() {
+
+        int slot, row, col;
+
+        while (true) {
+
+            slot = random.nextInt(9) + 1;
+
+            row = getRowFromSlot(slot);
+            col = getColFromSlot(slot);
+            System.out.println("Placement for the computer's move:");
+
+
+            if (isValidMove(slot, row, col)) {
+
+                System.out.println("Computer chooses slot: " + slot);
+                System.out.println("Row:"+(row+1));
+                System.out.println("Coloumn:"+(col+1));
+
+                placeMove(row, col, computerSymbol);
+                break;
+            }
+        }
     }
 
     /*
