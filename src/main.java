@@ -38,12 +38,13 @@ public class main {
 
             printBoard();
 
-            // UC9 + UC10 (stub)
+            // UC9 + UC10
             if (checkWin() || checkDraw()) {
                 gameOver = true;
                 break;
             }
 
+            // Switch turn
             isHumanTurn = !isHumanTurn;
         }
     }
@@ -91,6 +92,9 @@ public class main {
         int col = getColFromSlot(slot);
 
         if (isValidMove(slot, row, col)) {
+            System.out.println("Placement for player's move:");
+            System.out.println("Row" + (row+1));
+            System.out.println("Coloumn:" + col);
             placeMove(row, col, playerSymbol);
         } else {
             System.out.println("Invalid move. Try again.");
@@ -151,6 +155,11 @@ public class main {
 
             if (isValidMove(slot, row, col)) {
                 System.out.println("Computer chooses slot: " + slot);
+                System.out.println("Placement for computer's move:");
+                                System.out.println("Row" + (row+1));
+                System.out.println("Coloumn:" + col);
+
+
                 placeMove(row, col, computerSymbol);
                 break;
             }
@@ -208,10 +217,21 @@ public class main {
     }
 
     /*
-     * UC10 (stub for now)
+     * UC10: Detect Draw Condition
      */
     static boolean checkDraw() {
-        return false;
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+
+                if (board[i][j] == '-') {
+                    return false;
+                }
+            }
+        }
+
+        System.out.println("Game is a Draw!");
+        return true;
     }
 
     /*
